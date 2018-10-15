@@ -78,12 +78,12 @@
 #include "algorithm.h"
 #include "max30102.h"
 
-//if Adafruit Flora development board is chosen, include NeoPixel library and define an NeoPixel object
-#if defined(ARDUINO_AVR_FLORA8)
-#include "adafruit_neopixel.h"
-#define BRIGHTNESS_DIVISOR 8  //to lower the max brightness of the neopixel LED
-Adafruit_NeoPixel LED = Adafruit_NeoPixel(1, 8, NEO_GRB + NEO_KHZ800);
-#endif
+////if Adafruit Flora development board is chosen, include NeoPixel library and define an NeoPixel object
+//#if defined(ARDUINO_AVR_FLORA8)
+//#include "adafruit_neopixel.h"
+//#define BRIGHTNESS_DIVISOR 8  //to lower the max brightness of the neopixel LED
+//Adafruit_NeoPixel LED = Adafruit_NeoPixel(1, 8, NEO_GRB + NEO_KHZ800);
+//#endif
 
 #define MAX_BRIGHTNESS 255
 
@@ -107,16 +107,6 @@ uint8_t uch_dummy;
 // the setup routine runs once when you press reset:
 void setup() {
 
-#if defined(ARDUINO_AVR_LILYPAD_USB)    
-  pinMode(13, OUTPUT);  //LED output pin on Lilypad
-#endif
-
-#if defined(ARDUINO_AVR_FLORA8)
-  //Initialize the LED
-  LED.begin();
-  LED.show();
-#endif
-
   maxim_max30102_reset(); //resets the MAX30102
   // initialize serial communication at 115200 bits per second:
   Serial.begin(115200);
@@ -127,12 +117,6 @@ void setup() {
   {
     Serial.write(27);       // ESC command
     Serial.print(F("[2J"));    // clear screen command
-#if defined(ARDUINO_AVR_LILYPAD_USB)    
-    Serial.println(F("Lilypad"));
-#endif
-#if defined(ARDUINO_AVR_FLORA8)
-    Serial.println(F("Adafruit Flora"));
-#endif
     Serial.println(F("Press any key to start conversion"));
     delay(1000);
   }
@@ -220,14 +204,6 @@ void loop() {
         if(un_brightness>MAX_BRIGHTNESS)
           un_brightness=MAX_BRIGHTNESS;
       }
-#if defined(ARDUINO_AVR_LILYPAD_USB)  
-      analogWrite(13, un_brightness);
-#endif
-
-#if defined(ARDUINO_AVR_FLORA8)
-      LED.setPixelColor(0, un_brightness/BRIGHTNESS_DIVISOR, 0, 0);
-      LED.show();
-#endif
 
       //send samples and calculation result to terminal program through UART
       Serial.print(F("red="));
